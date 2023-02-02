@@ -1,0 +1,6 @@
+{
+  "name": "decimal_fmt",
+  "class": "com.alibaba.datax.transformer.DecimalFmtTransformer",
+  "description": "decimal_fmt transformer",
+  "developer": "ag"
+}

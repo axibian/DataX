@@ -48,6 +48,7 @@
 
         <!-- reader -->
         <module>mysqlreader</module>
+        <module>s3reader</module>
         <module>drdsreader</module>
         <module>sqlserverreader</module>
         <module>postgresqlreader</module>
@@ -82,6 +83,7 @@
 
         <!-- writer -->
         <module>mysqlwriter</module>
+        <module>s3writer</module>
         <module>starrockswriter</module>
         <module>drdswriter</module>
         <module>oraclewriter</module>
@@ -124,7 +126,10 @@
         <!-- common support module -->
         <module>plugin-rdbms-util</module>
         <module>plugin-unstructured-storage-util</module>
-       
+        <module>decimalFmtTransformer</module>
+        <module>dicTransformer</module>
+        <module>timefmtTransformer</module>
+
     </modules>
 
     <dependencyManagement>

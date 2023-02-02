@@ -21,17 +21,19 @@ public class SubstrTransformer extends Transformer {
     public Record evaluate(Record record, Object... paras) {
 
         int columnIndex;
+        int subType;//0-从头截取；1-从尾截取
         int startIndex;
         int length;
 
         try {
-            if (paras.length != 3) {
-                throw new RuntimeException("dx_substr paras must be 3");
+            if (paras.length != 4) {
+                throw new RuntimeException("dx_substr paras must be 4");
             }
 
             columnIndex = (Integer) paras[0];
-            startIndex = Integer.valueOf((String) paras[1]);
-            length = Integer.valueOf((String) paras[2]);
+            subType = Integer.valueOf((String) paras[1]);
+            startIndex = Integer.valueOf((String) paras[2]);
+            length = Integer.valueOf((String) paras[3]);
 
         } catch (Exception e) {
             throw DataXException.asDataXException(TransformerErrorCode.TRANSFORMER_ILLEGAL_PARAMETER, "paras:" + Arrays.asList(paras).toString() + " => " + e.getMessage());
@@ -49,14 +51,21 @@ public class SubstrTransformer extends Transformer {
             if (startIndex > oriValue.length()) {
                 throw new RuntimeException(String.format("dx_substr startIndex(%s) out of range(%s)", startIndex, oriValue.length()));
             }
-            if (startIndex + length >= oriValue.length()) {
-                newValue = oriValue.substring(startIndex, oriValue.length());
-            } else {
-                newValue = oriValue.substring(startIndex, startIndex + length);
+            if(subType == 0){
+                if (startIndex + length >= oriValue.length()) {
+                    newValue = oriValue.substring(startIndex, oriValue.length());
+                } else {
+                    newValue = oriValue.substring(startIndex, startIndex + length);
+                }
+                record.setColumn(columnIndex, new StringColumn(newValue));
+            }else if(subType == 1){
+                if (startIndex + length >= oriValue.length()) {
+                    newValue = oriValue.substring(0, oriValue.length() - startIndex);
+                } else {
+                    newValue = oriValue.substring(oriValue.length() - startIndex - length, oriValue.length() - startIndex);
+                }
+                record.setColumn(columnIndex, new StringColumn(newValue));
             }
-
-            record.setColumn(columnIndex, new StringColumn(newValue));
-
         } catch (Exception e) {
             throw DataXException.asDataXException(TransformerErrorCode.TRANSFORMER_RUN_EXCEPTION, e.getMessage(),e);
         }

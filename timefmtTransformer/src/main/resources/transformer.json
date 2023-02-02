@@ -1,0 +1,6 @@
+{
+  "name": "time_fmt",
+  "class": "com.alibaba.datax.transformer.TimeFmtTransformer",
+  "description": "time_fmt transformer",
+  "developer": "ag"
+}

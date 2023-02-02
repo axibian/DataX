@@ -1,0 +1,6 @@
+{
+  "name": "dic_fmt",
+  "class": "com.alibaba.datax.transformer.DicTransformer",
+  "description": "dic_fmt transformer",
+  "developer": "ag"
+}
