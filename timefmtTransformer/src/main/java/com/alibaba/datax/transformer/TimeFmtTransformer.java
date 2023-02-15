@@ -24,17 +24,19 @@ public class TimeFmtTransformer extends Transformer{
     public Record evaluate(Record record, Object... paras){
         int columnIndex;
         int type;//1-转成Date；2-转成时间戳
+        int timestampUnit;//时间戳单位：1-秒；2-毫秒
         String defaultValue = null;//传时间戳
 
         try {
-            if (paras.length != 3 && paras.length != 2) {
-                throw new RuntimeException("time_fmt paras must be 2 or 3");
+            if (paras.length != 3 && paras.length != 4) {
+                throw new RuntimeException("time_fmt paras must be 3 or 4");
             }
 
             columnIndex = (Integer) paras[0];
             type = Integer.valueOf((String) paras[1]);
-            if(paras.length == 3){
-                defaultValue = (String) paras[2];
+            timestampUnit = Integer.valueOf((String) paras[2]);
+            if(paras.length == 4){
+                defaultValue = (String) paras[3];
             }
 
         } catch (Exception e) {
@@ -50,16 +52,25 @@ public class TimeFmtTransformer extends Transformer{
                     time = defaultValue;
                 }
                 if(time != null){
-                    record.setColumn(columnIndex, new DateColumn(Long.parseLong(time)));
+                    Long timel = Long.parseLong(time);
+                    if((timel < 10000000000l && timel>0) || timel == -28800){//秒的转成毫秒
+                        timel *= 1000;
+                    }
+                    record.setColumn(columnIndex, new DateColumn(timel));
                 }
             } else if (type == 2) {
                 if(column.getType() == Column.Type.DATE){
                     Date date = column.asDate();
-                    if(date == null && StringUtils.isNotBlank(defaultValue)){
-                        date = new Date(Long.parseLong(defaultValue));
-                    }
                     if(date != null){
-                        record.setColumn(columnIndex, new LongColumn(date.getTime()));
+                        long timel = date.getTime();
+                        if(timestampUnit == 1){
+                            timel /= 1000;
+                        }
+                        record.setColumn(columnIndex, new LongColumn(timel));
+                    }else{
+                        if(StringUtils.isNotBlank(defaultValue)){
+                            record.setColumn(columnIndex, new LongColumn(Long.parseLong(defaultValue)));
+                        }
                     }
                 }
             }

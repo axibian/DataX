@@ -129,6 +129,7 @@
         <module>decimalFmtTransformer</module>
         <module>dicTransformer</module>
         <module>timefmtTransformer</module>
+        <module>clickhousereader</module>
 
     </modules>
 
